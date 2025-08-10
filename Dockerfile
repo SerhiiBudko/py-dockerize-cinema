@@ -16,12 +16,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# код
 COPY . .
 
-RUN useradd -ms /bin/bash appuser
-RUN mkdir -p /vol/static /vol/media \
-    && chown -R appuser:appuser /vol
+RUN useradd -ms /bin/bash appuser && \
+    mkdir -p /vol/static /vol/media && \
+    chown -R appuser:appuser /vol
 
 
 USER appuser
