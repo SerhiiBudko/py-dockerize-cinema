@@ -5,7 +5,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# системні пакети: клієнт Postgres для pg_isready, білд-інструменти, та Pillow deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
     build-essential \
@@ -14,18 +13,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# залежності python
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # код
 COPY . .
 
-# статик/медіа директорії
-RUN mkdir -p /vol/static /vol/media
-
-# некореневий користувач (опційно, але краще)
 RUN useradd -ms /bin/bash appuser
+RUN mkdir -p /vol/static /vol/media \
+    && chown -R appuser:appuser /vol
+
+
 USER appuser
 
 EXPOSE 8000

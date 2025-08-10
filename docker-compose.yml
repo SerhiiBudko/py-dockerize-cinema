@@ -28,7 +28,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8001:8000"
+      - "8000:8000"
     volumes:
       - .:/app
       - static_data:/vol/static
@@ -37,8 +37,9 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "python manage.py migrate &&
-                  python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   db_data:
